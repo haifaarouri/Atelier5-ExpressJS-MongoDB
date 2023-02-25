@@ -8,11 +8,13 @@ router.get('/noteName', studentService.getByNoteSortedByName)
 
 router.post('/addStudent', studentService.addStudent)
 
-router.get('/:id', studentService.getByID)
+// router.get('/:id', studentService.getByID)
 
 router.get('/findByName/:name', studentService.getByName)
 
 // router.put('/:id', studentService.updateStudent)
+
+router.get('/ageAndname', studentService.getNote)
 
 router.put('/updateNote', studentService.updateNote)
 

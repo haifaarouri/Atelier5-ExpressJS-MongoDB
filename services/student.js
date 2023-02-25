@@ -54,15 +54,20 @@ exports.updateStudent = (req, res, next) => {
     .catch(err => res.status(400).json('Error: '+ err));
 }
 
-exports.updateNote = (req, res, next) => {
-    Student.find({ age: { $gt: 18 }, name : { $regex:'A^' } }, req.body)
-    .then(s =>{
-        s.name= req.body.name;
-        s.age= req.body.age;
-        s.note= req.body.note+2;
-    })
-    .then(s => res.json(s))
-    .catch(err => res.status(400).json('Error: '+ err));
+exports.getNote = (req, res, next) => {
+    Student.find({ age: { $gt: 18 } , name : { $regex:/^A.*/ } })
+    .then((students)=>res.json({message : "List of All Students have age > 18 and name starts with A", studentList : students}))
+    .catch(err => res.status(400).json('Error: '+ err))
+}
+
+exports.updateNote = async (req, res, next) => {
+    const sList = await Student.find({ age: { $gt: 18 }, name : { $regex:/^A.*/ } }, req.body)
+    for(let i=0; i<sList.length; i++){
+        await Student.findOneAndUpdate({ _id:sList[i]._id }, {$set: {
+            note: sList[i].note += 2
+        }})
+    }
+    res.send({ message: "List of students is updated !" })
 }
 
 exports.deleteStudent = (req, res, next) => {
